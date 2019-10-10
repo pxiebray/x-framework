@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.x.framework</groupId>
+        <artifactId>provider</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>provider-api</artifactId>
+
+    <!--api里面不写死依赖 全部设置为provided 以便部分使用api内容 例如仅仅使用vo的情况-->
+    <dependencies>
+        <dependency>
+            <groupId>com.x.framework</groupId>
+            <artifactId>service-starter</artifactId>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+</project>
