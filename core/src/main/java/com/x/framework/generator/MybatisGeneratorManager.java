@@ -54,20 +54,20 @@ public class MybatisGeneratorManager {
 	 * @param tableName           表格
 	 * @param entityName          实体类名称
 	 */
-	protected void generator(String tableName, String entityName, TargetConfig mapperConfig, TargetConfig modelConfig) throws IOException {
+	protected void generator(String tableName, String entityName, TargetConfig xmlConfig, TargetConfig modelConfig) throws IOException {
 		// target project and package path
-		String targetMapperProject = TargetPathUtil.getTargetFullSourcePath(mapperConfig.getProjectName(), mapperConfig.getSourcePath());
+		String targetXmlProject = TargetPathUtil.getTargetFullSourcePath(xmlConfig.getProjectName(), xmlConfig.getSourcePath());
 		String targetModelProject = TargetPathUtil.getTargetFullSourcePath(modelConfig.getProjectName(), modelConfig.getSourcePath());
-		File mapperDirectory = new File(targetMapperProject);
+		File xmlDirectory = new File(targetXmlProject);
 		File modelDirectory = new File(targetModelProject);
-		if (!mapperDirectory.exists()) {
-			mapperDirectory.mkdirs();
+		if (!xmlDirectory.exists()) {
+			xmlDirectory.mkdirs();
 		}
 		if (!modelDirectory.exists()) {
 			modelDirectory.mkdirs();
 		}
 
-		String targetMapperPackage = TargetPathUtil.getFullPackagePath(mapperConfig.getPackagePath(), mapperConfig.getPackageLayer());
+		String targetMapperPackage = TargetPathUtil.getFullPackagePath(xmlConfig.getPackagePath(), xmlConfig.getPackageLayer());
 		String targetModelPackage = TargetPathUtil.getFullPackagePath(modelConfig.getPackagePath(), modelConfig.getPackageLayer());
 
 		// configuration
@@ -99,7 +99,7 @@ public class MybatisGeneratorManager {
 
 		// xml
 		SqlMapGeneratorConfiguration sqlMapGeneratorConfiguration = new SqlMapGeneratorConfiguration();
-		sqlMapGeneratorConfiguration.setTargetProject(targetMapperProject);
+		sqlMapGeneratorConfiguration.setTargetProject(targetXmlProject);
 		sqlMapGeneratorConfiguration.setTargetPackage(targetMapperPackage);
 		sqlMapGeneratorConfiguration.addProperty("enableSubPackages", "true");
 		context.setSqlMapGeneratorConfiguration(sqlMapGeneratorConfiguration);

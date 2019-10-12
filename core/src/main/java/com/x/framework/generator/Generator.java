@@ -69,7 +69,7 @@ public class Generator {
 
 	public void generatorMybatis(String tableNames) throws Exception {
 		MybatisGeneratorManager mybatisGeneratorManager = new MybatisGeneratorManager(jdbcConfig);
-		mybatisGeneratorManager.generator(tableNames, modelName, mapperTargetConfig, modelTargetConfig);
+		mybatisGeneratorManager.generator(tableNames, modelName, xmlTargetConfig, modelTargetConfig);
 	}
 
 	public void generatorVelocity() throws Exception {
