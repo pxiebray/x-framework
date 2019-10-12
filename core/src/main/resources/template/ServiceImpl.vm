@@ -1,0 +1,12 @@
+package ${packageName}.service.impl;
+
+import ${packageName}.service.I${modelName}Service;
+
+/**
+* ${modelName} controller
+* Created by robot on ${ctime}.
+*/
+public class ${modelName}ServiceImpl implements I${modelName}Service{
+
+}
+

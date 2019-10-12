@@ -1,6 +1,6 @@
 package com.x.framework.boot.web;
 
-import com.ztest.framework.core.base.Response;
+import com.x.framework.core.base.Response;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;

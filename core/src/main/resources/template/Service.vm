@@ -1,0 +1,10 @@
+package ${packageName}.service;
+
+/**
+* ${modelName} controller
+* Created by robot on ${ctime}.
+*/
+public interface I${modelName}Service{
+
+}
+

@@ -1,11 +1,12 @@
 package com.x.framework.boot.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ztest.framework.core.base.Response;
-import com.ztest.framework.core.base.ResponseCode;
-import com.ztest.framework.core.exception.BusinessException;
-import com.ztest.framework.core.exception.FatalException;
-import com.ztest.framework.core.exception.HttpException;
+
+import com.x.framework.core.base.Response;
+import com.x.framework.core.base.ResponseCode;
+import com.x.framework.core.exception.BusinessException;
+import com.x.framework.core.exception.FatalException;
+import com.x.framework.core.exception.HttpException;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -57,13 +58,13 @@ public class ExceptionAdvice {
 			// 自定义严重异常, 将异常相关数据置入logger的threadLocal中
 			MDC.put("alter", "true");
 			MDC.put("extension", getExceptionExtension((FatalException) e));
-			response = new Response<>(false, ResponseCode.SYS_EXCEPTION.getCode(), ResponseCode.SYS_EXCEPTION.getShowMsg(),
+			response = new Response<>(false, ResponseCode.SYS_EXCEPTION.getCode(), ResponseCode.SYS_EXCEPTION.getMsg(),
 					getStackTrace(e, isPrintStackTrace));
 		} else if (e instanceof IllegalArgumentException) {
 			response = new Response<>(false, ResponseCode.VALIDATE_EXCEPTION.getCode(), e.getMessage(),
 					getStackTrace(e, isPrintStackTrace));
 		} else {
-			response = new Response<>(false, ResponseCode.SYS_EXCEPTION.getCode(), ResponseCode.SYS_EXCEPTION.getShowMsg(),
+			response = new Response<>(false, ResponseCode.SYS_EXCEPTION.getCode(), ResponseCode.SYS_EXCEPTION.getMsg(),
 					getStackTrace(e, isPrintStackTrace));
 		}
 		return new ResponseEntity(response, status);

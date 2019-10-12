@@ -1,8 +1,8 @@
 package com.x.framework.boot.web.client;
 
-import com.ztest.framework.core.context.RequestContext;
-import com.ztest.framework.core.context.RequestHeader;
-import com.ztest.framework.core.context.RequestHeaderUtil;
+import com.x.framework.core.context.RequestContext;
+import com.x.framework.core.context.RequestHeader;
+import com.x.framework.core.context.RequestHeaderUtil;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
