@@ -1,12 +1,22 @@
 package com.x.framework.generator;
 
+import com.x.framework.generator.config.JdbcConfig;
+import com.x.framework.generator.config.TargetConfig;
 import org.mybatis.generator.api.MyBatisGenerator;
 import org.mybatis.generator.config.*;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 基于Mybatis-generator的代码生成
+ *
+ * @author xiepeng
+ * @version 1.0
+ * @date 2019年10月12日16:32:05
+ */
 public class MybatisGeneratorManager {
 
 	private String jdbcDriver;
@@ -14,7 +24,24 @@ public class MybatisGeneratorManager {
 	private String jdbcUserId;
 	private String jdbcPassword;
 
-	public MybatisGeneratorManager(String jdbcDriver, String jdbcUrl, String jdbcUserId, String jdbcPassword) {
+	public MybatisGeneratorManager(JdbcConfig jdbcConfig) throws Exception {
+		if (jdbcConfig == null) {
+			throw new Exception("请配置jdbcDriver/jdbcUrl/jdbcUserId/jdbcPassword");
+		}
+
+		this.jdbcDriver = jdbcConfig.getJdbcDriver();
+		this.jdbcUrl = jdbcConfig.getJdbcUrl();
+		this.jdbcUserId = jdbcConfig.getJdbcUserId();
+		this.jdbcPassword = jdbcConfig.getJdbcPassword();
+		if (jdbcDriver == null || jdbcUrl == null || jdbcUserId == null || jdbcPassword == null) {
+			throw new Exception("请配置jdbcDriver/jdbcUrl/jdbcUserId/jdbcPassword");
+		}
+	}
+
+	public MybatisGeneratorManager(String jdbcDriver, String jdbcUrl, String jdbcUserId, String jdbcPassword) throws Exception{
+		if (jdbcDriver == null || jdbcUrl == null || jdbcUserId == null || jdbcPassword == null) {
+			throw new Exception("请配置jdbcDriver/jdbcUrl/jdbcUserId/jdbcPassword");
+		}
 		this.jdbcDriver = jdbcDriver;
 		this.jdbcUrl = jdbcUrl;
 		this.jdbcUserId = jdbcUserId;
@@ -24,20 +51,27 @@ public class MybatisGeneratorManager {
 	/**
 	 * 生成xml + model
 	 *
-	 * @param modelProject  model文件所在工程名称
-	 * @param mapperProject mapper文件所在工程名称
-	 * @param targetPackage       生成代码模块的package路径
 	 * @param tableName           表格
 	 * @param entityName          实体类名称
 	 */
-	public void generator(String modelProject, String mapperProject, String targetPackage, String tableName, String entityName) throws IOException {
-		String targetMapperProject = Generator.getTargetProjectPath(modelProject);
-		String targetModelProject = Generator.getTargetProjectPath(mapperProject);
-		String targetMapperPackage = targetPackage + "." + Generator.PACKAGE_LAYER_MAPPER;
-		String targetModelPackage = targetPackage + "." + Generator.PACKAGE_LAYER_MODEL;
-		Configuration configuration = new Configuration();
+	protected void generator(String tableName, String entityName, TargetConfig mapperConfig, TargetConfig modelConfig) throws IOException {
+		// target project and package path
+		String targetMapperProject = TargetPathUtil.getTargetFullSourcePath(mapperConfig.getProjectName(), mapperConfig.getSourcePath());
+		String targetModelProject = TargetPathUtil.getTargetFullSourcePath(modelConfig.getProjectName(), modelConfig.getSourcePath());
+		File mapperDirectory = new File(targetMapperProject);
+		File modelDirectory = new File(targetModelProject);
+		if (!mapperDirectory.exists()) {
+			mapperDirectory.mkdirs();
+		}
+		if (!modelDirectory.exists()) {
+			modelDirectory.mkdirs();
+		}
 
-		// context
+		String targetMapperPackage = TargetPathUtil.getFullPackagePath(mapperConfig.getPackagePath(), mapperConfig.getPackageLayer());
+		String targetModelPackage = TargetPathUtil.getFullPackagePath(modelConfig.getPackagePath(), modelConfig.getPackageLayer());
+
+		// configuration
+		Configuration configuration = new Configuration();
 		Context context = new Context(null);
 		context.setId("generator");
 		context.setTargetRuntime("MyBatis3");
@@ -58,15 +92,15 @@ public class MybatisGeneratorManager {
 
 		// javaModel
 		JavaModelGeneratorConfiguration javaModelGeneratorConfiguration = new JavaModelGeneratorConfiguration();
+		javaModelGeneratorConfiguration.setTargetProject(targetModelProject);
 		javaModelGeneratorConfiguration.setTargetPackage(targetModelPackage);
-		javaModelGeneratorConfiguration.setTargetProject(targetModelProject + "/src/main/java");
 		javaModelGeneratorConfiguration.addProperty("enableSubPackages", "true");
 		context.setJavaModelGeneratorConfiguration(javaModelGeneratorConfiguration);
 
 		// xml
 		SqlMapGeneratorConfiguration sqlMapGeneratorConfiguration = new SqlMapGeneratorConfiguration();
+		sqlMapGeneratorConfiguration.setTargetProject(targetMapperProject);
 		sqlMapGeneratorConfiguration.setTargetPackage(targetMapperPackage);
-		sqlMapGeneratorConfiguration.setTargetProject(targetMapperProject + "/src/main/java");
 		sqlMapGeneratorConfiguration.addProperty("enableSubPackages", "true");
 		context.setSqlMapGeneratorConfiguration(sqlMapGeneratorConfiguration);
 
@@ -82,5 +116,7 @@ public class MybatisGeneratorManager {
 			e.printStackTrace();
 		}
 	}
+
+
 
 }

@@ -1,19 +1,20 @@
 package com.x.framework.generator;
 
+import com.x.framework.generator.config.TargetConfig;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.Date;
+import java.util.Map;
 import java.util.Properties;
 
 /**
- * Velocity负责Controller/IService/ServiceImpl/Mapper四个文件的生成
- * 因为这4类文件是业务开发的主体部分，故生成后不允许被生成器再次覆盖，否则易造成业务代码丢失。
+ * 基于Velocity的代码生成，
+ * 负责Controller/IService/ServiceImpl/Mapper四个文件的生成，重复生成时不覆盖已有文件，避免业务代码丢失。
  *
  * @author xiepeng
  * @data 2019年10月11日13:33:52
@@ -27,8 +28,6 @@ public class VelocityManager {
 	private static final String TEMPLATE_MAPPER = "template/Mapper.vm";
 	private static final String TEMPLATE_SERVICE_IMPL = "template/ServiceImpl.vm";
 
-
-
 	/**
 	 * 配置Velocity引擎从classpath中加载模板
 	 */
@@ -39,87 +38,50 @@ public class VelocityManager {
 		Velocity.init(properties);
 	}
 
-	/**
-	 * 创建Controller模板文件
-	 *
-	 * @param projectName      目标所在工程名称
-	 * @param packageModelPath 目标所在模块的package路径
-	 * @param modelName        用于构建文件名称，对应模块名并首字母大写
-	 * @throws Exception
-	 */
-	protected static void generatorController(String projectName, String packageModelPath, String modelName) throws Exception {
-		String targetFilePath = Generator.getTargetFilePath(projectName, packageModelPath, Generator.PACKAGE_LAYER_CONTROLLER);
+	protected static void generatorController(String modelName, TargetConfig targetConfig) throws Exception {
+		String targetFilePath = TargetPathUtil.getTargetFilePath(targetConfig);
 		targetFilePath += "/" + modelName + "Controller.java";
-
-		VelocityContext context = new VelocityContext();
-		context.put("modelName", modelName);
-		context.put("ctime", new Date().toString());
-		context.put("packageName", packageModelPath);
-
+		VelocityContext context = buildVelocityContext(modelName, targetConfig, null);
 		doGenerator(TEMPLATE_CONTROLLER, context, targetFilePath);
 	}
 
-	/**
-	 * 创建Service模板文件
-	 *
-	 * @param projectName      目标所在工程名称
-	 * @param packageModelPath 目标所在模块的package路径
-	 * @param modelName        用于构建文件名称，对应模块名并首字母大写
-	 * @throws Exception
-	 */
-	protected static void generatorService(String projectName, String packageModelPath, String modelName) throws Exception {
-		String targetFilePath = Generator.getTargetFilePath(projectName, packageModelPath, Generator.PACKAGE_LAYER_SERVICE);
+	protected static void generatorService(String modelName, TargetConfig targetConfig) throws Exception {
+		String targetFilePath = TargetPathUtil.getTargetFilePath(targetConfig);
 		targetFilePath += "/I" + modelName + "Service.java";
-
-		VelocityContext context = new VelocityContext();
-		context.put("modelName", modelName);
-		context.put("ctime", new Date().toString());
-		context.put("packageName", packageModelPath);
-		context.put("p", packageModelPath);
-
+		VelocityContext context = buildVelocityContext(modelName, targetConfig, null);
 		doGenerator(TEMPLATE_SERVICE, context, targetFilePath);
 	}
 
-	/**
-	 * 创建Mapper模板文件
-	 *
-	 * @param projectName      目标所在工程名称
-	 * @param packageModelPath 目标所在模块的package路径
-	 * @param modelName        用于构建文件名称，对应模块名并首字母大写
-	 * @throws Exception
-	 */
-	protected static void generatorMapper(String projectName, String packageModelPath, String modelName) throws Exception {
-		String targetFilePath = Generator.getTargetFilePath(projectName, packageModelPath, Generator.PACKAGE_LAYER_MAPPER);
+	protected static void generatorMapper(String modelName, TargetConfig targetConfig) throws Exception {
+		String targetFilePath = TargetPathUtil.getTargetFilePath(targetConfig);
 		targetFilePath += "/" + modelName + "Mapper.java";
-
-		VelocityContext context = new VelocityContext();
-		context.put("modelName", modelName);
-		context.put("ctime", new Date().toString());
-		context.put("packageName", packageModelPath);
-		context.put("s", packageModelPath);
-
+		VelocityContext context = buildVelocityContext(modelName, targetConfig, null);
 		doGenerator(TEMPLATE_MAPPER, context, targetFilePath);
 	}
 
-	/**
-	 * 创建ServiceImpl模板文件
-	 *
-	 * @param projectName      目标所在工程名称
-	 * @param packageModelPath 目标所在模块的package路径
-	 * @param modelName        用于构建文件名称，对应模块名并首字母大写
-	 * @throws Exception
-	 */
-	protected static void generatorServiceImpl(String projectName, String packageModelPath, String modelName) throws Exception {
-		String targetFilePath = Generator.getTargetFilePath(projectName, packageModelPath, Generator.PACKAGE_LAYER_SERVICE_IMPL);
+	protected static void generatorServiceImpl(String modelName, TargetConfig targetConfig) throws Exception {
+		String targetFilePath = TargetPathUtil.getTargetFilePath(targetConfig);
 		targetFilePath += "/" + modelName + "ServiceImpl.java";
+		VelocityContext context = buildVelocityContext(modelName, targetConfig, null);
+		doGenerator(TEMPLATE_SERVICE_IMPL, context, targetFilePath);
+	}
 
+	/**
+	 * 构建Velocity Context
+	 * @param modelName
+	 * @param targetConfig
+	 * @param props 自定义数据
+	 */
+	private static VelocityContext buildVelocityContext(String modelName, TargetConfig targetConfig, Map<String, String> props) {
 		VelocityContext context = new VelocityContext();
 		context.put("modelName", modelName);
 		context.put("ctime", new Date().toString());
-		context.put("packageName", packageModelPath);
-		context.put("i", packageModelPath);
+		context.put("packageName", targetConfig.getPackagePath());
 
-		doGenerator(TEMPLATE_SERVICE_IMPL, context, targetFilePath);
+		if (props != null) {
+			props.forEach((key, value) -> context.put(key, value));
+		}
+		return context;
 	}
 
 	/**
@@ -129,15 +91,23 @@ public class VelocityManager {
 	 * @param context
 	 * @param targetFilePath
 	 */
-	private static void doGenerator(String templateName, VelocityContext context, String targetFilePath) {
+	private static void doGenerator(String templateName, VelocityContext context, String targetFilePath) throws Exception {
 		File targetFile = new File(targetFilePath);
-		// 若文件已经存在则跳过
 		if (targetFile.exists()) {
+			// skip if target file exist!
 			System.out.println("Skip Create, " + targetFilePath);
 			return;
+		} else {
+			// mkdir for parent dirs
+			File parent = targetFile.getParentFile();
+			if (parent.exists() && !parent.isDirectory()) {
+				throw new Exception("目标路径下无法创建文件，" + parent.getPath());
+			} else {
+				parent.mkdirs();
+			}
 		}
 
-		// 生成模板文件
+		// generator file
 		try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(targetFilePath))) {
 			Template template = Velocity.getTemplate(templateName, fileEncoding);
 			template.merge(context, writer);
@@ -147,5 +117,4 @@ public class VelocityManager {
 			e.printStackTrace();
 		}
 	}
-
 }
