@@ -324,13 +324,4 @@ public class Generator {
 			return generator;
 		}
 	}
-
-	public static void main(String[] args) throws Exception {
-		Generator generator = new Generator.Builder().setModelName("Test").setPackageModelPath("com.x.framework.test")
-				.setJdbc("com.mysql.jdbc.Driver", "jdbc:mysql://106.14.186.226:7070/kuxiu_gift", "root", "Q`W1E2R3T4Kuxiu2018~!@#$")
-				.build();
-
-		generator.generator("t_test0");
-	}
-
 }
