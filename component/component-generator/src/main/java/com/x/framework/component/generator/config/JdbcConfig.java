@@ -1,4 +1,4 @@
-package com.x.framework.generator.config;
+package com.x.framework.component.generator.config;
 
 /**
  * JDBC 链接配置<br/>

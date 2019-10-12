@@ -1,4 +1,4 @@
-package com.x.framework.generator.config;
+package com.x.framework.component.generator.config;
 
 /**
  * 目标文件相关配置

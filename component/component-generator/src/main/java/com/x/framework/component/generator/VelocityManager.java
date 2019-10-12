@@ -1,6 +1,6 @@
-package com.x.framework.generator;
+package com.x.framework.component.generator;
 
-import com.x.framework.generator.config.TargetConfig;
+import com.x.framework.component.generator.config.TargetConfig;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;

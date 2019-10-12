@@ -1,7 +1,7 @@
-package com.x.framework.generator;
+package com.x.framework.component.generator;
 
-import com.x.framework.generator.config.JdbcConfig;
-import com.x.framework.generator.config.TargetConfig;
+import com.x.framework.component.generator.config.JdbcConfig;
+import com.x.framework.component.generator.config.TargetConfig;
 import org.mybatis.generator.api.MyBatisGenerator;
 import org.mybatis.generator.config.*;
 

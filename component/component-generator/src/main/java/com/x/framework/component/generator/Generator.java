@@ -1,7 +1,7 @@
-package com.x.framework.generator;
+package com.x.framework.component.generator;
 
-import com.x.framework.generator.config.JdbcConfig;
-import com.x.framework.generator.config.TargetConfig;
+import com.x.framework.component.generator.config.JdbcConfig;
+import com.x.framework.component.generator.config.TargetConfig;
 
 /**
  * 代码生成工具主体类
@@ -269,5 +269,20 @@ public class Generator {
 			generator.setModelTargetConfig(modelTargetConfig);
 			return generator;
 		}
+	}
+
+	public static void main(String[] args) {
+		try {
+			Generator generator = new Generator.Builder()
+					.setModelName("Test")
+					.setPackagePath("com.x.framework.component.test")
+					.setJdbcConfig(new JdbcConfig("com.mysql.jdbc.Driver", "jdbc:mysql://106.14.186.226:7070/kuxiu_gift", "root", "Q`W1E2R3T4Kuxiu2018~!@#$"))
+					.build();
+
+			generator.generator("t_test0");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 	}
 }
