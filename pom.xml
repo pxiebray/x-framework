@@ -28,7 +28,7 @@
 
         <!-- 第三方依赖版本 -->
         <pagehelper.boot.version>1.2.3</pagehelper.boot.version>
-        <mysql.driver.version>5.1.30</mysql.driver.version>
+        <mysql.driver.version>8.0.16</mysql.driver.version>
         <druid.version>1.1.5</druid.version>
         <elasticjob.version>2.1.5</elasticjob.version>
         <curator.version>2.12.0</curator.version>
